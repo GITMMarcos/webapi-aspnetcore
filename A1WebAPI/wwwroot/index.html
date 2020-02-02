@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Maurício Marcos</title>
+</head>
+<body>
+    <script type="text/javascript">
+        var xhr = new XMLHttpRequest();
+
+        xhr.addEventListener('readystatechange', function () {
+            if (this.readyState === 4) {
+                alert(this.responseText);
+            }
+        });
+
+        xhr.open('GET', 'https://localhost:44311/api/values');
+        xhr.send();
+      
+    </script>
+</body>
+</html>
