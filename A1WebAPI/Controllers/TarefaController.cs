@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http.Headers;
 using A1WebAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace A1WebAPI.Controllers
@@ -39,6 +43,39 @@ namespace A1WebAPI.Controllers
             }
 
             return Ok(listaTarefa);
+        }
+
+        [HttpGet]
+        [Route("{id:int}")] // A rota pode ser definida também diretamente na decoração do verbo http. Ex.: [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public ActionResult<Tarefa> Get(int id)
+        {
+
+            //Recuperando valores do Header: Keys usuario e senha
+            var headerUsuario = Request.Headers.FirstOrDefault(h => h.Key == "usuario").Value;
+            var headerSenha = Request.Headers.FirstOrDefault(h => h.Key == "senha").Value;
+
+            if (id < 0) return BadRequest($"Objeto não localizado: {id}");
+
+            var lista = new List<Tarefa>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                var tarefa = new Tarefa()
+                {
+                    Id = i,
+                    Nome = $"Tarefa id: {i}",
+                    isFinalizado = (i % 2 == 0) ? true : false
+                };
+
+                lista.Add(tarefa);
+            }
+
+            var tarefaResultado = lista.FirstOrDefault(t => t.Id == id);
+            if (tarefaResultado == null) return NoContent();
+
+            return Ok(tarefaResultado);
         }
     }
 }
