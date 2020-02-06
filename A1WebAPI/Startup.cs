@@ -26,6 +26,10 @@ namespace A1WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            // Adicionado para que seja possível retornar o resultado da chamada a API no formato XML, quando a aplicação
+            // cliente solicitar no cabeçalho o valor de retorno accept : application/xml
+            services.AddMvc().AddXmlDataContractSerializerFormatters().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
