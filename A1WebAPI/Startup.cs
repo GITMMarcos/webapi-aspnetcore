@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using A1WebAPI.Utils.Formatters;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 
 namespace A1WebAPI
 {
@@ -35,6 +38,21 @@ namespace A1WebAPI
             // cliente solicitar no cabeçalho o valor de retorno accept : application/xml
             .AddXmlDataContractSerializerFormatters()
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            // Comando utilizado para retornar o nome do arquivo XML A1WebAPI.xml. Esse arquivo é adicionado na raiz do projeto automaticamente,
+            // uma vez que tenha alterado nas propriedades do projeto (API) > Build > Output Path.
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+
+            // Uma vez obtido o nome do arquivo de configuração, recupera-se o caminho absoluto do arquivo.
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+            // Realiza a injeção de dependência do Swagger no container
+            services.AddSwaggerGen(config => {
+                config.SwaggerDoc("Docv1", new OpenApiInfo() { Title = "APIs do Sistema", Version = "v1"});
+                config.SwaggerDoc("Docv2", new OpenApiInfo() { Title = "APIs do Sistema", Version = "v2" });
+                // Esta configuração é populada a partir dos dados gerados bo arquivo obtido na variável xmlPath
+                config.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +72,17 @@ namespace A1WebAPI
             app.UseStaticFiles();
 
             app.UseHttpsRedirection();
+
+
+            // Add via NuGet: Swashbuckle.AspNetCore
+            app.UseSwagger();
+            app.UseSwaggerUI(config => {
+                // config.SwaggerDoc("Docv1", new OpenApiInfo() { Title = "APIs do Sistema", Version = "v1"} a partir do nome "Docv1",
+                // a configuração abaixo consegue gerar a interface para o usuário com a devida correspondência.
+                config.SwaggerEndpoint("/swagger/Docv1/swagger.json", "APIs do Sistema - Endpoints Versão 1");
+                config.SwaggerEndpoint("/swagger/Docv2/swagger.json", "APIs do Sistema - Endpoints Versão 2");
+            });
+
             app.UseMvc();
         }
     }

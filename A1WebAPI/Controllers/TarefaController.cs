@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http.Headers;
 using A1WebAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace A1WebAPI.Controllers
 {
+    /// <summary>
+    /// Serviço responsável pelas ações relacionadas às Tarefas da Aplicação
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class TarefaController : ControllerBase
     {
+        /// <summary>
+        /// Retorna a lista com todas as tarefas.
+        /// </summary>
+        /// <returns>Lista de tarefas</returns>
         [FormatFilter]
         [HttpGet]
         //[Produces("application/xml")] //Força o método da API retornar o conteúdo no formato XML

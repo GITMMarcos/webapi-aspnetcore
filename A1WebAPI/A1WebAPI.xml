@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>A1WebAPI</name>
+    </assembly>
+    <members>
+        <member name="T:A1WebAPI.Controllers.TarefaController">
+            <summary>
+            Serviço responsável pelas ações relacionadas às Tarefas da Aplicação
+            </summary>
+        </member>
+        <member name="M:A1WebAPI.Controllers.TarefaController.Get">
+            <summary>
+            Retorna a lista com todas as tarefas.
+            </summary>
+            <returns>Lista de tarefas</returns>
+        </member>
+    </members>
+</doc>
