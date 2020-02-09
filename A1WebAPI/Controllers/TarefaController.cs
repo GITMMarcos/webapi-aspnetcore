@@ -15,7 +15,7 @@ namespace A1WebAPI.Controllers
     {
         [FormatFilter]
         [HttpGet]
-        [Produces("application/xml")] //Força o método da API retornar o conteúdo no formato XML
+        //[Produces("application/xml")] //Força o método da API retornar o conteúdo no formato XML
         public ActionResult<IEnumerable<Tarefa>> Get()
         {
             var rdn = new Random();
