@@ -14,13 +14,13 @@ namespace A1WebAPI.Controllers
     [ApiController]
     public class TarefaController : ControllerBase
     {
-        /// <summary>
-        /// Retorna a lista com todas as tarefas.
-        /// </summary>
+        /// <summary> Retorna a lista com todas as tarefas.</summary>
+        /// <response code="200">Lista todas as tarefas.</response>
         /// <returns>Lista de tarefas</returns>
         [FormatFilter]
         [HttpGet]
         //[Produces("application/xml")] //Força o método da API retornar o conteúdo no formato XML
+        [ProducesResponseType(typeof(IEnumerable<Tarefa>), StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Tarefa>> Get()
         {
             var rdn = new Random();
@@ -53,6 +53,12 @@ namespace A1WebAPI.Controllers
         }
 
 
+        /// <summary>Retorna uma tarefa correspondente ao id selecionado.</summary>
+        /// <response code="400">Quando o id for negativo.</response>
+        /// <response code="204">Quando não for identificada a tarefa a partir do id.</response>
+        /// <response code="200">Quando a tarefa for localizada a partir do id.</response>
+        /// <param name="id">Identificador único da Tarefa.</param>
+        /// <returns></returns>
         [HttpGet("{id:int}.{format?}")] // Possibilita que o cliente informe o tipo de retorno na própria URI: EX.: https://localhost:44311/api/tarefa/2.xml
         //[Route("{id:int}.{format?}")] // A rota pode ser definida também diretamente na decoração do verbo http. Ex.: [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

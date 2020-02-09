@@ -10,10 +10,17 @@
             </summary>
         </member>
         <member name="M:A1WebAPI.Controllers.TarefaController.Get">
-            <summary>
-            Retorna a lista com todas as tarefas.
-            </summary>
+            <summary> Retorna a lista com todas as tarefas.</summary>
+            <response code="200">Lista todas as tarefas.</response>
             <returns>Lista de tarefas</returns>
+        </member>
+        <member name="M:A1WebAPI.Controllers.TarefaController.Get(System.Int32)">
+            <summary>Retorna uma tarefa correspondente ao id selecionado.</summary>
+            <response code="400">Quando o id for negativo.</response>
+            <response code="204">Quando não for identificada a tarefa a partir do id.</response>
+            <response code="200">Quando a tarefa for localizada a partir do id.</response>
+            <param name="id">Identificador único da Tarefa.</param>
+            <returns></returns>
         </member>
     </members>
 </doc>
