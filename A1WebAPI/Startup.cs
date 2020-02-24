@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
+using A1WebAPI.Configs;
 using A1WebAPI.Utils.Formatters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace A1WebAPI
@@ -29,11 +24,17 @@ namespace A1WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            // Recuperando valores do appsetings.json por intermédio da classe auxiliar criada para representar a configuração
+            var configuracao = new Configuracao();
+            Configuration.GetSection("Configuracao").Bind(configuracao);
+
             services.AddMvc(options => {
-                // Adicionado para que seja carregada a dependência no container a classe que foi criada
+                // Adicionado para que seja carregada a dependência no container da classe que foi criada
                 // para responder na formatação de CSV: classe criada => CsvOutputFormatter
                 options.OutputFormatters.Add(new CsvOutputFormatter());
             })
+
             // Adicionado para que seja possível retornar o resultado da chamada a API no formato XML, quando a aplicação
             // cliente solicitar no cabeçalho o valor de retorno accept : application/xml
             .AddXmlDataContractSerializerFormatters()
@@ -53,6 +54,10 @@ namespace A1WebAPI
                 // Esta configuração é populada a partir dos dados gerados bo arquivo obtido na variável xmlPath
                 config.IncludeXmlComments(xmlPath);
             });
+
+            // Realiza/inicializa a injeção de dependência, carregando as dependências do memory cache
+            services.AddMemoryCache();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

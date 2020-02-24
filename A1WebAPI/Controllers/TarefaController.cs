@@ -4,6 +4,7 @@ using System.Linq;
 using A1WebAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace A1WebAPI.Controllers
 {
@@ -14,6 +15,14 @@ namespace A1WebAPI.Controllers
     [ApiController]
     public class TarefaController : ControllerBase
     {
+        // Propriedade para armazenar o objeto injetado no construtor do MemoryCache
+        private readonly IMemoryCache _memoryCache;
+
+        public TarefaController(IMemoryCache memoryCache)
+        {
+            _memoryCache = memoryCache;
+        }
+
         /// <summary> Retorna a lista com todas as tarefas.</summary>
         /// <response code="200">Lista todas as tarefas.</response>
         /// <returns>Lista de tarefas</returns>
@@ -87,9 +96,19 @@ namespace A1WebAPI.Controllers
             }
 
             var tarefaResultado = lista.FirstOrDefault(t => t.Id == id);
+
+            // Aqui é criado ou obtido o cache a partir do seu ID. Caso ainda esteja em cache (o tempo que o cache ficará disponível está na configuração: entry.SlidingExpiration = TimeSpan.FromSeconds(30);)
+            // Uma vez que não esteja em cache, a linha 104 será executada (pensando em uma aplicação que acessaria um repositório de dados, então a chamada ao repositório só ocorreria quando o cache não existir ou tiver expirado)
+            var cache = _memoryCache.GetOrCreate($"tarefa-{id}", entry =>
+            {
+                entry.SlidingExpiration = TimeSpan.FromSeconds(30);
+                return Ok(tarefaResultado);
+            });
+
+
             if (tarefaResultado == null) return NoContent();
 
-            return Ok(tarefaResultado);
+            return Ok(cache);
         }
     }
 }

@@ -24,8 +24,8 @@ namespace A1WebAPI.Utils.Formatters
             var response = context.HttpContext.Response;
             var buffer = new StringBuilder();
 
-            // Realizada essa validação para que não seja lançada uma exceção na linha 31 ou 44, ou seja,
-            // caso o tipo de retorno seja uma string, é porque no controller a respostafoi diferente de OK (http 200)
+            // Realizada essa validação para que não seja lançada uma exceção na linha 32 ou 44, ou seja,
+            // caso o tipo de retorno seja uma string, é porque no controller a resposta foi diferente de OK (http 200)
             if (context.ObjectType == typeof(string))
                 return response.WriteAsync(context.Object.ToString());
 
